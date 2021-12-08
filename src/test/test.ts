@@ -1,4 +1,6 @@
 import chai from "chai";
+import fs from "fs";
+import { extractWord, getRecursiveHTML } from "lib/data";
 import { detectParticle, spacingWords } from "lib/word";
 
 describe("util", ()=>{
@@ -17,6 +19,7 @@ describe("util", ()=>{
                 chai.expect.fail("Failed to detect particle.");
             }
         }
+
     })
 
     it("Detect Spacing", ()=>{
@@ -31,8 +34,39 @@ describe("util", ()=>{
             const fixed_text = result.join(" ");
             
             if(fixed_text != test_case[1]) {
+                console.log(fixed_text, " != ",test_case[1]);
                 chai.expect.fail("Failed to split spacing.");
             }
         }
+    })
+
+    it("Get Data", async function(){
+        this.timeout(60000);
+
+        const url = "www.naver.com"
+        const htmls = await getRecursiveHTML("www.naver.com", 0);
+    })
+
+    it("Filtered Words", async function(){
+        this.timeout(60000);
+
+        const url = "naver.com"
+        const words = await extractWord(url, 1);
+        const filtered_word = [];
+
+        for(const word of words) {
+            const tmp = detectParticle(word)
+            if(tmp) {
+                filtered_word.push(tmp.word);
+            }
+            else {
+                filtered_word.push(word);
+            }
+        }
+
+        if(!fs.existsSync("test_result")){
+            fs.mkdirSync("test_result");   
+        }
+        fs.writeFile("test_result/words.json", JSON.stringify(filtered_word), ()=>{});
     })
 })

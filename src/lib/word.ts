@@ -1,68 +1,90 @@
+import HashMap from "hashmap";
+
 interface ParticleFilter {
-    regex: string;
+    regex: RegExp;
     condition?: "isCoda"|"isNotCoda";
-    exception?: any;
+    exception?: HashMap<string, number>;
 }
 
 type Word = string;
 type Character = string;
 
-export function detectParticle(word: Word){
+export function detectParticle(inputWord: Word){
     const subject_particle: ParticleFilter[] = [
         {
-            regex:"은",
+            regex:/은/,
             condition:"isCoda"
         },
         {
-            regex:"는",
+            regex:/는/,
             condition:"isNotCoda"
         },
         {
-            regex:"이",
+            regex:/이/,
             condition:"isCoda"
         },
         {
-            regex:"가",
-            condition:"isNotCoda"
+            regex:/가/,
+            condition:"isNotCoda",
+            exception: (()=>{
+                const hashmap = new HashMap<string, number>();
+                hashmap.set("추가", 1);
+                hashmap.set("가기", 1);
+                hashmap.set("바로가기", 1);
+                return hashmap;
+            })()
         }
     ];
 
     const objective_particle: ParticleFilter[] = [
         {
-            regex:"을",
+            regex:/을/,
             condition:"isCoda"
         },
         {
-            regex:"를",
+            regex:/를/,
             condition:"isNotCoda"
         },
         {
-            regex:"으로",
+            regex:/으로/,
             condition:"isCoda"
         },
         {
-            regex:"로",
-            condition:"isNotCoda"
+            regex:/로/,
+            condition:"isNotCoda",
+            exception: (()=>{
+                const hashmap = new HashMap<string, number>();
+                hashmap.set("프로", 1);
+                hashmap.set("바로", 1);
+                hashmap.set("바로가기", 1);
+                hashmap.set("크로스", 1);
+                return hashmap;
+            })()
         },
         {
-            regex:"에",
-            condition:"isCoda"
+            regex:/에/,
+            condition:"isCoda",
+            exception: (()=>{
+                const hashmap = new HashMap<string, number>();
+                hashmap.set("에게", 1);
+                return hashmap;
+            })()
         },
         {
-            regex:"에게"
+            regex:/에게/
         }
     ];
 
     const extra_particle: ParticleFilter[] = [
         {
-            regex:"의",
+            regex:/의/,
         },
         {
-            regex:"와",
+            regex:/와/,
             condition:"isNotCoda"
         },
         {
-            regex:"과",
+            regex:/과/,
             condition:"isCoda"
         }
     ];
@@ -70,37 +92,55 @@ export function detectParticle(word: Word){
     for(const regex of [...subject_particle, ...objective_particle,
          ...extra_particle, ]) 
     {
-        const match = word.match(regex.regex);
+        const match = inputWord.match(regex.regex);
+
         if(match) {
-            const postWord = word.substr(0, match.index);
-            if(!postWord) continue;
+            const preWord = inputWord.substr(0, match.index);
+            const postWord = inputWord.substr(match.index!+1, inputWord.length);
+
+            if(!preWord) continue;
             
+            let word = (preWord + regex.regex).replace(/[^가-힣]*/g, "");
+            let word2 = (preWord + regex.regex + postWord[0]).replace(/[^가-힣]*/g, "");
+            let word3 = (preWord + regex.regex + postWord[0] + postWord[1]).replace(/[^가-힣]*/g, "");
+            let word4 = (regex.regex + postWord[0]).replace(/[^가-힣]*/g, "");
+    
+            if(regex.exception?.has(word4)) continue;
+            if(regex.exception?.has(word3)) continue;
+            if(regex.exception?.has(word2)) continue;
+            if(regex.exception?.has(word)) continue;
+
+            // Check Condition
             if(regex.condition == "isCoda") {
-                const lastWord = postWord.substr(postWord.length-1, 
-                    postWord.length
+                const lastWord = preWord.substr(preWord.length-1, 
+                    preWord.length
                 );
                 const coda = getCoda(lastWord);
                 if(coda) {
-                    return {word: postWord, particle: regex.regex, index: match.index};
+                    return {word: preWord, particle: regex.regex, index: match.index};
                 }
+
             }
             else if(regex.condition == "isNotCoda") {
-                const lastWord = postWord.substr(postWord.length-1, 
-                    postWord.length
+                const lastWord = preWord.substr(preWord.length-1, 
+                    preWord.length
                 );
                 const coda = getCoda(lastWord);
                 if(!coda) {
-                    return {word: postWord, particle: regex.regex, index: match.index};
+                    return {word: preWord, particle: regex.regex, index: match.index};
                 }
             }
             else {
-                return {word: postWord, particle: regex.regex, index: match.index};
+                return {word: preWord, particle: regex.regex, index: match.index};
             }
         }
     }
 }
 
 export function detectConjunction(){
+    const conjunctions = ["그리고", "또", "이렇게", "그런데", "그러나", "그래도",
+        "그래서", "게다가", "따라서", "때문에", "아니면", "왜냐하면", "오히려"
+    ];
 
     return {}
 }
@@ -116,7 +156,9 @@ export function spacingWords(text: string){
     while(condition) {
         const result = detectParticle(text);
         if(result) {
-            words.push(result?.word+result.particle);
+            let word = result?.word+result.particle;
+            word = word.replace(/[^가-힣]*/g, "");
+            words.push(word);
             text = text.substr(result.index!+1, text.length+1);
         }
         else {
