@@ -9,6 +9,9 @@ interface ParticleFilter {
 type Word = string;
 type Character = string;
 
+/** Detect particles. '오늘은 보는사람이 많으니 다음에 합시다.'
+ * -> [ '은', '이', '에']
+*/
 export function detectParticle(inputWord: Word){
     const subject_particle: ParticleFilter[] = [
         {
@@ -137,6 +140,9 @@ export function detectParticle(inputWord: Word){
     }
 }
 
+/** Detect conjunction. '음식의 모양이 예쁘지는 않았다. 그래도 맛은 있었다.'
+ *  -> '그래도'
+ */
 export function detectConjunction(){
     const conjunctions = ["그리고", "또", "이렇게", "그런데", "그러나", "그래도",
         "그래서", "게다가", "따라서", "때문에", "아니면", "왜냐하면", "오히려"
@@ -145,31 +151,7 @@ export function detectConjunction(){
     return {}
 }
 
-export function detectTypo(){
-    return {}
-}
-
-export function spacingWords(text: string){
-    const words = [];
-    let condition = true;
-
-    while(condition) {
-        const result = detectParticle(text);
-        if(result) {
-            let word = result?.word+result.particle;
-            word = word.replace(/[^가-힣]*/g, "");
-            words.push(word);
-            text = text.substr(result.index!+1, text.length+1);
-        }
-        else {
-            words.push(text);
-            condition = false;
-        }
-    }
-
-    return words;
-}
-
+/** Get a onset from korean. '집'->'ㅈ' */
 export function getOnset(character: Character){
     const uni_char = character.charCodeAt(0);
     if(uni_char>(588+0xAC00)) {
@@ -180,6 +162,7 @@ export function getOnset(character: Character){
     }
 }
 
+/** Get a nucleus from korean. '집'->'ㅣ' */
 export function getNucleus(character: Character){
     const uni_char = character.charCodeAt(0);
     const no_oneset = (uni_char - 0xAC00) % 588;
@@ -192,6 +175,7 @@ export function getNucleus(character: Character){
     }
 }
 
+/** Get a nucleus from korean. '집'->'ㅂ' */
 export function getCoda(character: Character){
     const uni_char = character.charCodeAt(0);
     const coda_order = (uni_char-0xAC00)%28;

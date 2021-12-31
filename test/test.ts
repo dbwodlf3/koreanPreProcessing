@@ -1,7 +1,8 @@
 import chai from "chai";
 import fs from "fs";
-import { extractWord, getRecursiveHTML } from "lib/data";
-import { detectParticle, spacingWords } from "lib/word";
+import { extractWord, getRecursiveHTML } from "../src/lib/data";
+import { detectParticle } from "../src/lib/word";
+import { insertSpaceBetweenWords } from "../src/lib/middleware";
 
 describe("util", ()=>{
     it("Detect Particles", ()=>{
@@ -30,7 +31,7 @@ describe("util", ()=>{
         ];
 
         for(const test_case of test_cases) {
-            const result = spacingWords(test_case[0]);
+            const result = insertSpaceBetweenWords(test_case[0]);
             const fixed_text = result.join(" ");
             
             if(fixed_text != test_case[1]) {

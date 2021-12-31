@@ -1,9 +1,12 @@
 import { http } from "follow-redirects"
 import { parse, HTMLElement } from "node-html-parser"
 
-export  async function extractWord(originalUrl: string, depth: number=0, items= 100) { 
+/**
+ * Extract words from url.
+*/
+export  async function extractWordsFromUrl(originalUrl: string, depth: number=0, items= 100) { 
     const words: string[] = []
-    const htmls = await getRecursiveHTML(originalUrl, depth, items);
+    const htmls = await extractWordsFromUrlRecursviely(originalUrl, depth, items);
 
     for(const html of htmls) {
         words.push(...getWords(html.innerText))
@@ -12,7 +15,10 @@ export  async function extractWord(originalUrl: string, depth: number=0, items= 
     return words;
 }
 
-export async function getRecursiveHTML(originUrl: string, depth: number = 0, items= 100) {
+/**
+ * Extract words from url Recursively
+*/
+async function extractWordsFromUrlRecursviely(originUrl: string, depth: number = 0, items= 100) {
 
     const htmls: HTMLElement[] = [];
     const urls: string[] = []
@@ -47,14 +53,14 @@ export async function getRecursiveHTML(originUrl: string, depth: number = 0, ite
         }
 
         for(const url of urls) {
-            htmls.push(...await getRecursiveHTML(url, depth-1));
+            htmls.push(...await extractWordsFromUrlRecursviely(url, depth-1));
         }
     }
 
     return htmls;
 }
 
-export function getHTML(url: string): Promise<string> {
+function getHTML(url: string): Promise<string> {
     const parsed_url = parseURL(url);
 
     const options = {
@@ -82,7 +88,7 @@ export function getHTML(url: string): Promise<string> {
     })
 }
 
-export function parseURL (url:string){
+function parseURL (url:string){
     if(url[0] == "#") {
         return { protocol: "anchor"};
     }

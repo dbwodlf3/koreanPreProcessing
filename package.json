@@ -1,10 +1,11 @@
 {
   "name": "kpp",
   "version": "1.0.0",
-  "description": "library for korean nlp",
-  "main": "index.js",
+  "description": "library for korean nlp. korean text preprocessing ",
+  "main": "dest/src/index.js",
   "scripts": {
-    "test": "ts-node ./scripts/test.ts"
+    "test": "ts-node ./scripts/test.ts",
+    "build": "ts-node ./scripts/build.ts"
   },
   "author": "",
   "license": "ISC",
