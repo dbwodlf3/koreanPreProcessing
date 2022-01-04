@@ -1,6 +1,6 @@
 import chai from "chai";
 import fs from "fs";
-import { extractWord, getRecursiveHTML } from "../src/lib/data";
+import { extractWordsFromUrl } from "../src/lib/data";
 import { detectParticle } from "../src/lib/word";
 import { insertSpaceBetweenWords } from "../src/lib/middleware";
 
@@ -45,14 +45,14 @@ describe("util", ()=>{
         this.timeout(60000);
 
         const url = "www.naver.com"
-        const htmls = await getRecursiveHTML("www.naver.com", 0);
+        const htmls = await extractWordsFromUrl("www.naver.com", 0);
     })
 
     it("Filtered Words", async function(){
         this.timeout(60000);
 
         const url = "naver.com"
-        const words = await extractWord(url, 1);
+        const words = await extractWordsFromUrl(url, 1);
         const filtered_word = [];
 
         for(const word of words) {

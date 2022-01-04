@@ -8,7 +8,11 @@
     "build": "ts-node ./scripts/build.ts"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dbwodlf3/koreanPreProcessing"
+  },
   "devDependencies": {
     "@types/chai": "^4.2.22",
     "@types/follow-redirects": "^1.13.1",
