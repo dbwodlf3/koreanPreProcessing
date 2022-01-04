@@ -1,8 +1,6 @@
 import chai from "chai";
 import fs from "fs";
-import { extractWordsFromUrl } from "../src/lib/data";
-import { detectParticle } from "../src/lib/word";
-import { insertSpaceBetweenWords } from "../src/lib/middleware";
+import kpp from "../";
 
 describe("util", ()=>{
     it("Detect Particles", ()=>{
@@ -15,7 +13,7 @@ describe("util", ()=>{
         ];
 
         for(const test_case of test_cases) {
-            const result = detectParticle(test_case[0]);
+            const result = kpp.words.detectParticle(test_case[0]);
             if( result?.word != test_case[1]) {
                 chai.expect.fail("Failed to detect particle.");
             }
@@ -31,7 +29,7 @@ describe("util", ()=>{
         ];
 
         for(const test_case of test_cases) {
-            const result = insertSpaceBetweenWords(test_case[0]);
+            const result = kpp.middlewares.insertSpaceBetweenWords(test_case[0]);
             const fixed_text = result.join(" ");
             
             if(fixed_text != test_case[1]) {
@@ -45,18 +43,18 @@ describe("util", ()=>{
         this.timeout(60000);
 
         const url = "www.naver.com"
-        const htmls = await extractWordsFromUrl("www.naver.com", 0);
+        const htmls = await kpp.data.extractWordsFromUrl("www.naver.com", 0);
     })
 
     it("Filtered Words", async function(){
         this.timeout(60000);
 
         const url = "naver.com"
-        const words = await extractWordsFromUrl(url, 1);
+        const words = await kpp.data.extractWordsFromUrl(url, 1);
         const filtered_word = [];
 
         for(const word of words) {
-            const tmp = detectParticle(word)
+            const tmp = kpp.words.detectParticle(word)
             if(tmp) {
                 filtered_word.push(tmp.word);
             }
