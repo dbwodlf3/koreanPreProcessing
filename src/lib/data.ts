@@ -1,5 +1,7 @@
+import iconv from "iconv-lite";
 import { http } from "follow-redirects"
-import { parse, HTMLElement } from "node-html-parser"
+import { parse, HTMLElement} from "node-html-parser"
+import { HTMLParserData } from "./interface";
 
 /**
  * Extract words from url.
@@ -23,14 +25,34 @@ async function extractWordsFromUrlRecursviely(originUrl: string, depth: number =
     const htmls: HTMLElement[] = [];
     const urls: string[] = []
     let html;
+    let html_binary;
+    let html_string;
 
     try {
-        html = parse(await getHTML(originUrl));
+        html_binary = await getHTML(originUrl);
+        html_string = html_binary.toString("utf-8");
+        html = parse(html_string);
     }
     catch {
         return []
     }
+
+    const meta_tags = html.getElementsByTagName("meta");
     const a_tags = html.getElementsByTagName("a");
+
+    let charset: any = '';
+    for(const meta_tag of meta_tags) {
+        charset = meta_tag.getAttribute("charset") || '';
+        if(charset) break;
+        charset = meta_tag.getAttribute("content") || '';
+        charset = charset.match(/charset=[\s]*[a-zA-Z0-9-]*/i)[0].replace(/charset=/i, "");
+        if(charset) break;
+    }
+
+    if(charset) { 
+        html_string = iconv.decode(html_binary, charset);
+        html = parse(html_string);
+    }
 
     htmls.push(html);
 
@@ -60,7 +82,7 @@ async function extractWordsFromUrlRecursviely(originUrl: string, depth: number =
     return htmls;
 }
 
-function getHTML(url: string): Promise<string> {
+function getHTML(url: string): Promise<Buffer> {
     const parsed_url = parseURL(url);
 
     const options = {
@@ -71,12 +93,13 @@ function getHTML(url: string): Promise<string> {
 
     return new Promise((resolve, reject)=>{
         const req = http.get(options,  (res)=>{
-            let data: any;
+            let data: any = [];
             res.on("data", (chunk)=>{
-                data += chunk;
+                data.push(chunk);
             });
             res.on("end", ()=>{
-                resolve(data);
+                const buffer = Buffer.concat(data);
+                resolve(buffer);
             });
             res.on("error", (err)=>{
                 reject(err);
