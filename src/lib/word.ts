@@ -156,6 +156,7 @@ export function detectConjunction(){
 export async function detectCompoundNoun2(inputWord: Word): Promise<string[]|undefined>{
     if(detectParticle(inputWord)) return;
     if(inputWord.match(/\s/)) return;
+    if(inputWord.length<2) return;
 
     for(let i =0; i < inputWord.length; i++) {
         let pre_text = inputWord.substring(0, i);
@@ -173,6 +174,7 @@ export async function detectCompoundNoun2(inputWord: Word): Promise<string[]|und
 export async function detectCompoundNoun3(inputWord: Word): Promise<string[]|undefined>{
     if(detectParticle(inputWord)) return;
     if(inputWord.match(/\s/)) return;
+    if(inputWord.length<3) return;
 
     let pre_text = '', post_text = '', last_text = '';
 
