@@ -151,6 +151,13 @@ export function detectConjunction(){
     return {}
 }
 
+/** Detect compound noun. '마른풀' -> ['마른', '풀']*/
+export function detectCompoundNoun(){
+    const nouns = ["남성", "여성"];
+    const adj_nouns = ["강력"];
+    const adjs = ["마른", "푸른", "붉은", "노란", "천연"];
+}
+
 /** Get a onset from korean. '집'->'ㅈ' */
 export function getOnset(character: Character){
     const uni_char = character.charCodeAt(0);
