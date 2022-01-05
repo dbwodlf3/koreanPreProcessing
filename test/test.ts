@@ -1,5 +1,6 @@
 import chai from "chai";
 import kpp from "../";
+import { detectCompoundNoun2 } from "../dest/src/lib/word";
 
 import {getWord} from "../src/lib/db"
 
