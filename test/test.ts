@@ -1,6 +1,6 @@
 import chai from "chai";
 import kpp from "../";
-import { detectCompoundNoun2 } from "../dest/src/lib/word";
+import { detectCompoundNoun2, detectCompoundNoun3} from "../src/lib/word";
 
 import {getWord} from "../src/lib/db"
 
@@ -67,25 +67,26 @@ describe("util", ()=>{
     })
 
     it("Filtered Words", async function(){
-        this.timeout(60000);
+        this.timeout(3000);
 
-        const url = "naver.com"
-        const words = await kpp.data.extractWordsFromUrl(url, 1);
-        const filtered_word = [];
+        // const url = "naver.com"
+        // const words = await kpp.data.extractWordsFromUrl(url, 1);
+        // const filtered_word = [];
 
-        for(const word of words) {
-            const tmp = kpp.words.detectParticle(word)
-            if(tmp) {
-                filtered_word.push(tmp.word);
-            }
-            else {
-                filtered_word.push(word);
-            }
-        }
+        // for(const word of words) {
+        //     const tmp = kpp.words.detectParticle(word)
+        //     if(tmp) {
+        //         filtered_word.push(tmp.word);
+        //     }
+        //     else {
+        //         filtered_word.push(word);
+        //     }
+        // }
 
         // if(!fs.existsSync("test_result")){
             // fs.mkdirSync("test_result");   
         // }
         // fs.writeFile("test_result/words.json", JSON.stringify(filtered_word), ()=>{});
     })
+
 })

@@ -7,11 +7,11 @@ export const db = new sqlite.Database(path.resolve(path.join(__dirname,"../data/
 
 // console.log(db);
 
-export function getWord(word: string, type: string): Promise<any[]>{
+export function getWord(word: string, type: string): Promise<any>{
     return new Promise((resolve, reject)=>{
         db.serialize(()=>{
-            db.all(`SELECT * FROM Word WHERE word=(?) AND type=(?)`, [word, type], (err, rows)=>{
-                resolve(rows);
+            db.get(`SELECT * FROM Word WHERE word=(?) AND type=(?)`, [word, type], (err, row)=>{
+                return resolve(row);
             });
         })
     })
