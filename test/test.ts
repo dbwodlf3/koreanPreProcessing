@@ -1,25 +1,44 @@
-// import chai from "chai";
-// import fs from "fs";
-// import kpp from "../";
+import chai from "chai";
+import kpp from "../";
 
-// describe("util", ()=>{
-//     it("Detect Particles", ()=>{
-//         const test_cases: any = [
-//             ["김치는", "김치"], ["하늘은", "하늘"], ["하늘이", "하늘"],
-//             ["김치가", "김치"], ["김치를","김치"], ["하늘을", "하늘"],
-//             ["땅으로", "땅"], ["김치로", "김치"], ["하늘에", "하늘"],
-//             ["하늘에게", "하늘"], ["김치의", "김치"], ["김치와", "김치"],
-//             ["하늘과", "하늘"], ["하늘", undefined]
-//         ];
+import {getWord} from "../src/lib/db"
 
-//         for(const test_case of test_cases) {
-//             const result = kpp.words.detectParticle(test_case[0]);
-//             if( result?.word != test_case[1]) {
-//                 chai.expect.fail("Failed to detect particle.");
-//             }
-//         }
+describe("util", ()=>{
+    it("Detect Particles", ()=>{
+        const test_cases: any = [
+            ["김치는", "김치"], ["하늘은", "하늘"], ["하늘이", "하늘"],
+            ["김치가", "김치"], ["김치를","김치"], ["하늘을", "하늘"],
+            ["땅으로", "땅"], ["김치로", "김치"], ["하늘에", "하늘"],
+            ["하늘에게", "하늘"], ["김치의", "김치"], ["김치와", "김치"],
+            ["하늘과", "하늘"], ["하늘", undefined]
+        ];
 
-//     })
+        for(const test_case of test_cases) {
+            const result = kpp.words.detectParticle(test_case[0]);
+            // console.log(result);
+            if( result?.word != test_case[1]) {
+                chai.expect.fail("Failed to detect particle.");
+            }
+        }
+
+    })
+
+    it("Detect Compound Noun", async ()=>{
+        const test_cases: any = [
+            ["복합명사", ["복합", "명사"]], ["볶음김치", ["볶음", "김치"]], 
+            ["강력살충제", ["강력", "살충제"]], ["전문투자", ["전문", "투자"]],
+            ["초보기사", ["초보", "기사"]], ["개미떼", ["개미", "떼"]],
+            ["띄어쓰기잘못", ["띄어쓰기", "잘못"]], ["띄어쓰기가잘못됨", undefined], ["해와달", undefined]
+        ];
+
+        for(const test_case of test_cases) {
+            const result = await kpp.words.detectCompoundNoun2(test_case[0]);
+
+            if( JSON.stringify(result) != JSON.stringify(test_case[1])) {
+                chai.expect.fail("Failed to detect compound noun.");
+            }
+        }
+    })
 
 //     it("Detect Spacing", ()=>{
 //         const test_cases: any = [
@@ -68,5 +87,4 @@
 //         }
 //         fs.writeFile("test_result/words.json", JSON.stringify(filtered_word), ()=>{});
 //     })
-// })
-// fs.readFile(, (err, data)=>{});
+})

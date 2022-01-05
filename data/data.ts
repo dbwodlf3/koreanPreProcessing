@@ -2,7 +2,7 @@ import fs from "fs";
 import sqlite3 from "sqlite3";
 
 const sqlite = sqlite3.verbose();
-const db = new sqlite.Database("database.sqlite3");
+const db = new sqlite.Database("../src/data/database.sqlite3");
 
 db.serialize(()=>{
     db.run(`

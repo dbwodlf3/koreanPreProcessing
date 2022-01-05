@@ -12,6 +12,16 @@ console.log(
 	kpp.words.getNucleus("안"),
 	kpp.words.getCoda("안")
 );
+
+// {word: "하늘", particle: /이/}
+console.log(kpp.words.detectParticle("하늘이 밝다."))
+
+// ["복합", "명사"]
+console.log(kpp.words.detectCompoundNoun2("복합명사"))
+
+// ["복합", "명사", "명사"]
+console.log(kpp.words.detectCompoundNoun3("복합명사명사"))
+
 ```
 
 ## Middlewares

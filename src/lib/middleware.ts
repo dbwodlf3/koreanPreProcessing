@@ -24,3 +24,7 @@ export function insertSpaceBetweenWords(text: string){
 export function detectTypo(){
     return {}
 }
+
+export function insertSpaceNouns(word: string){
+    
+}

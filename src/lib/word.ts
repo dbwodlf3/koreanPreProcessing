@@ -1,4 +1,5 @@
 import HashMap from "hashmap";
+import { db, getWord } from "./db";
 
 interface ParticleFilter {
     regex: RegExp;
@@ -152,10 +153,46 @@ export function detectConjunction(){
 }
 
 /** Detect compound noun. '마른풀' -> ['마른', '풀']*/
-export function detectCompoundNoun(){
-    const nouns = ["남성", "여성"];
-    const adj_nouns = ["강력"];
-    const adjs = ["마른", "푸른", "붉은", "노란", "천연"];
+export async function detectCompoundNoun2(inputWord: Word): Promise<string[]|undefined>{
+    if(detectParticle(inputWord)) return;
+    if(inputWord.match(/\s/)) return;
+
+    for(let i =0; i < inputWord.length; i++) {
+        let pre_text = inputWord.substring(0, i);
+        let post_text = inputWord.substring(i);
+        const pre_word = await getWord(pre_text, "명사");
+        const post_word = await getWord(post_text, "명사");
+
+        if( pre_word.length && post_word.length) {
+            return [pre_text, post_text];
+        }
+    }
+    return;
+}
+
+export async function detectCompoundNoun3(inputWord: Word): Promise<string[]|undefined>{
+    if(detectParticle(inputWord)) return;
+    if(inputWord.match(/\s/)) return;
+
+    let pre_text = '', post_text = '', last_text = '';
+
+    for(let i = 0; i < inputWord.length; i++) {
+        for(let j = i+1; j < inputWord.length; j++) {
+            pre_text = inputWord.substring(0, i);
+            post_text = inputWord.substring(i, j);
+            last_text = inputWord.substring(j);
+
+            const pre_word = await getWord(pre_text, "명사");
+            const post_word = await getWord(post_text, "명사");
+            const last_word = await getWord(last_text, "명사");
+    
+    
+            if( pre_word.length && post_word.length && last_word.length) {
+                return [pre_text, post_text, last_text];
+            }
+        }
+    }
+    return;
 }
 
 /** Get a onset from korean. '집'->'ㅈ' */
