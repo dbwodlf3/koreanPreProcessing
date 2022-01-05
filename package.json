@@ -1,6 +1,6 @@
 {
   "name": "kpp",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "library for korean nlp. korean text preprocessing ",
   "main": "dest/src/index.js",
   "scripts": {

@@ -58,33 +58,33 @@ describe("util", ()=>{
 //         }
 //     })
 
-//     it("Get Data", async function(){
-//         this.timeout(60000);
+    it("Get Data", async function(){
+        this.timeout(60000);
 
-//         const url = "www.naver.com"
-//         const htmls = await kpp.data.extractWordsFromUrl("www.naver.com", 0);
-//     })
+        const url = "www.naver.com"
+        const htmls = await kpp.data.extractWordsFromUrl("www.naver.com", 0);
+    })
 
-//     it("Filtered Words", async function(){
-//         this.timeout(60000);
+    it("Filtered Words", async function(){
+        this.timeout(60000);
 
-//         const url = "naver.com"
-//         const words = await kpp.data.extractWordsFromUrl(url, 1);
-//         const filtered_word = [];
+        const url = "naver.com"
+        const words = await kpp.data.extractWordsFromUrl(url, 1);
+        const filtered_word = [];
 
-//         for(const word of words) {
-//             const tmp = kpp.words.detectParticle(word)
-//             if(tmp) {
-//                 filtered_word.push(tmp.word);
-//             }
-//             else {
-//                 filtered_word.push(word);
-//             }
-//         }
+        for(const word of words) {
+            const tmp = kpp.words.detectParticle(word)
+            if(tmp) {
+                filtered_word.push(tmp.word);
+            }
+            else {
+                filtered_word.push(word);
+            }
+        }
 
-//         if(!fs.existsSync("test_result")){
-//             fs.mkdirSync("test_result");   
-//         }
-//         fs.writeFile("test_result/words.json", JSON.stringify(filtered_word), ()=>{});
-//     })
+        // if(!fs.existsSync("test_result")){
+            // fs.mkdirSync("test_result");   
+        // }
+        // fs.writeFile("test_result/words.json", JSON.stringify(filtered_word), ()=>{});
+    })
 })

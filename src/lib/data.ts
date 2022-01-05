@@ -45,7 +45,8 @@ async function extractWordsFromUrlRecursviely(originUrl: string, depth: number =
         charset = meta_tag.getAttribute("charset") || '';
         if(charset) break;
         charset = meta_tag.getAttribute("content") || '';
-        charset = charset.match(/charset=[\s]*[a-zA-Z0-9-]*/i)[0].replace(/charset=/i, "");
+        if(charset) charset = charset.match(/charset=[\s]*[a-zA-Z0-9-]*/i);
+        if(charset) charset = charset[0].replace(/charset=/i, "");
         if(charset) break;
     }
 
