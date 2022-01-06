@@ -10,10 +10,17 @@ interface ParticleFilter {
 type Word = string;
 type Character = string;
 
+/** 
+ * @Todo 얼굴도 -> 얼굴 
+ * @Todo 
+*/
+
 /** Detect particles. '오늘은 보는사람이 많으니 다음에 합시다.'
  * -> [ '은', '이', '에']
 */
-export function detectParticle(inputWord: Word){
+export async function detectParticle(inputWord: Word){
+    if(await getWord(inputWord, "명사")) return;
+
     const subject_particle: ParticleFilter[] = [
         {
             regex:/은/,
@@ -154,7 +161,7 @@ export function detectConjunction(){
 
 /** Detect compound noun. '마른풀' -> ['마른', '풀']*/
 export async function detectCompoundNoun2(inputWord: Word): Promise<string[]|undefined>{
-    if(detectParticle(inputWord)) return;
+    if(await detectParticle(inputWord)) return;
     if(inputWord.match(/\s/)) return;
     if(inputWord.length<3) return;
     if(await getWord(inputWord, "명사")) return;
@@ -168,8 +175,7 @@ export async function detectCompoundNoun2(inputWord: Word): Promise<string[]|und
             if(post_word?.word?.length>=2)
                 return [pre_text, post_text];
             else {
-                post_word?.word == "떼"
-                return [pre_text, post_text];
+                if(post_word?.word == "떼") return [pre_text, post_text];
             }
         }
     }
@@ -177,7 +183,7 @@ export async function detectCompoundNoun2(inputWord: Word): Promise<string[]|und
 }
 
 export async function detectCompoundNoun3(inputWord: Word): Promise<string[]|undefined>{
-    if(detectParticle(inputWord)) return;
+    if(await detectParticle(inputWord)) return;
     if(inputWord.match(/\s/)) return;
     if(inputWord.length<=3) return;
     if(await getWord(inputWord, "명사")) return;

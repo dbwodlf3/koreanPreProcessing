@@ -5,7 +5,7 @@ import { detectCompoundNoun2, detectCompoundNoun3} from "../src/lib/word";
 import {getWord} from "../src/lib/db"
 
 describe("util", ()=>{
-    it("Detect Particles", ()=>{
+    it("Detect Particles", async ()=>{
         const test_cases: any = [
             ["김치는", "김치"], ["하늘은", "하늘"], ["하늘이", "하늘"],
             ["김치가", "김치"], ["김치를","김치"], ["하늘을", "하늘"],
@@ -15,8 +15,7 @@ describe("util", ()=>{
         ];
 
         for(const test_case of test_cases) {
-            const result = kpp.words.detectParticle(test_case[0]);
-            console.log(result);
+            const result = await kpp.words.detectParticle(test_case[0]);
             if( result?.word != test_case[1]) {
                 chai.expect.fail("Failed to detect particle.");
             }
