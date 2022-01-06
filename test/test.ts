@@ -16,7 +16,7 @@ describe("util", ()=>{
 
         for(const test_case of test_cases) {
             const result = kpp.words.detectParticle(test_case[0]);
-            // console.log(result);
+            console.log(result);
             if( result?.word != test_case[1]) {
                 chai.expect.fail("Failed to detect particle.");
             }
@@ -29,7 +29,8 @@ describe("util", ()=>{
             ["복합명사", ["복합", "명사"]], ["볶음김치", ["볶음", "김치"]], 
             ["강력살충제", ["강력", "살충제"]], ["전문투자", ["전문", "투자"]],
             ["초보기사", ["초보", "기사"]], ["개미떼", ["개미", "떼"]],
-            ["띄어쓰기잘못", ["띄어쓰기", "잘못"]], ["띄어쓰기가잘못됨", undefined], ["해와달", undefined]
+            ["띄어쓰기잘못", ["띄어쓰기", "잘못"]], ["띄어쓰기가잘못됨", undefined], 
+            ["해와달", undefined], ["아마추어", undefined]
         ];
 
         for(const test_case of test_cases) {

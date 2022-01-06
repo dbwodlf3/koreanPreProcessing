@@ -156,15 +156,21 @@ export function detectConjunction(){
 export async function detectCompoundNoun2(inputWord: Word): Promise<string[]|undefined>{
     if(detectParticle(inputWord)) return;
     if(inputWord.match(/\s/)) return;
-    if(inputWord.length<4) return;
+    if(inputWord.length<3) return;
+    if(await getWord(inputWord, "명사")) return;
 
     for(let i = 2; i < inputWord.length; i++) {
         let pre_text = inputWord.substring(0, i);
         let post_text = inputWord.substring(i);
         const pre_word = await getWord(pre_text, "명사");
         const post_word = await getWord(post_text, "명사");
-        if( pre_word?.word?.length>=2 && post_word?.word?.length>=2) {
-            return [pre_text, post_text];
+        if( pre_word?.word?.length>=2) {
+            if(post_word?.word?.length>=2)
+                return [pre_text, post_text];
+            else {
+                post_word?.word == "떼"
+                return [pre_text, post_text];
+            }
         }
     }
     return;
@@ -174,6 +180,7 @@ export async function detectCompoundNoun3(inputWord: Word): Promise<string[]|und
     if(detectParticle(inputWord)) return;
     if(inputWord.match(/\s/)) return;
     if(inputWord.length<=3) return;
+    if(await getWord(inputWord, "명사")) return;
 
     let pre_text = '', post_text = '', last_text = '';
 
